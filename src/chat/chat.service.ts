@@ -1,6 +1,8 @@
+import { plainToClass } from '@nestjs/class-transformer';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getChatListDTO } from 'src/chat/dto/get-chatlist.dto';
+import { UploadChatDTO } from 'src/chat/dto/upload-chat.dto';
 import { ChatEntity } from 'src/chat/entities/chat.entity';
 import { LessThan, Repository } from 'typeorm';
 
@@ -20,5 +22,10 @@ export class ChatService {
             }
         });
         return chatList;
+    }
+
+    async saveChat(dto: UploadChatDTO) {
+        const newChat: ChatEntity = plainToClass(ChatEntity, dto, {excludeExtraneousValues: true});
+        await this.chatRepository.save(newChat);
     }
 }

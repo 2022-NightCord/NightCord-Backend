@@ -1,3 +1,4 @@
+import { Expose } from '@nestjs/class-transformer';
 import { Entity, Column, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('chat')
@@ -9,13 +10,16 @@ export class ChatEntity {
     @Column({
         unsigned: true
     })
+    @Expose()
     guestId: number;
     
     @Column()
+    @Expose()
     date: Date;
 
     @Column({
         type: 'text'
     })
+    @Expose()
     content: string;
 }
