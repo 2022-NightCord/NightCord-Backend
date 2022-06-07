@@ -6,6 +6,7 @@ import { ChatModule } from 'src/chat/chat.module';
   imports: [
     TypeOrmModule.forRoot({
         type: 'mariadb',
+        port: Number(process.env.DB_PORT),
         host: process.env.DB_HOST,
         username: process.env.DB_USER,
         password: process.env.DB_PW,

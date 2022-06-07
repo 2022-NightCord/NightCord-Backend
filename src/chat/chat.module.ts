@@ -4,6 +4,7 @@ import { ClassTransformer } from '@nestjs/class-transformer';
 import { ChatController } from 'src/chat/chat.controller';
 import { ChatService } from 'src/chat/chat.service';
 import { ChatEntity } from 'src/chat/entities/chat.entity';
+import { ChatGateway } from './chat.gateway';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { ChatEntity } from 'src/chat/entities/chat.entity';
     ClassTransformer
   ],
   controllers: [ChatController],
-  providers: [ChatService]
+  providers: [ChatService, ChatGateway]
 })
 export class ChatModule {}
