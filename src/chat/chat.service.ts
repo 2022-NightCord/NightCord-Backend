@@ -13,7 +13,7 @@ export class ChatService {
     async getChatList(dto: getChatListDTO) {
         const { startChatId } = dto;
         const chatList = await this.chatRepository.find({
-            where: startChatId==0? null: {id: LessThan(startChatId)},
+            where: startChatId==0 ? null: {id: LessThan(startChatId)},
             take: 15,
             order: {
                 id: 'DESC'

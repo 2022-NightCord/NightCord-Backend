@@ -16,6 +16,7 @@ import { ChatModule } from 'src/chat/chat.module';
         entities: [__dirname + '/**/entities/*.entity.{js,ts}']
       }),
       ChatModule,
+      
   ],
 })
 export class AppModule {}
