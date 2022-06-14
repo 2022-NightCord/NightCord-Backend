@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ChatService } from 'src/chat/chat.service';
 import { getChatListDTO } from 'src/chat/dto/get-chatlist.dto';
 
@@ -9,5 +9,10 @@ export class ChatController {
     @Get()
     getChatList(@Query() dto: getChatListDTO) {
         return this.chatService.getChatList(dto);
+    }
+    
+    @Post('user')
+    getGuestId() {
+        return this.chatService.getGuestId();
     }
 }
