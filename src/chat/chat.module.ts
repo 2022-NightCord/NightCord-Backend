@@ -5,10 +5,11 @@ import { ChatController } from 'src/chat/chat.controller';
 import { ChatService } from 'src/chat/chat.service';
 import { ChatEntity } from 'src/chat/entities/chat.entity';
 import { ChatGateway } from './chat.gateway';
+import { GuestEntity } from 'src/chat/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ChatEntity]),
+    TypeOrmModule.forFeature([ChatEntity, GuestEntity]),
     ClassTransformer
   ],
   controllers: [ChatController],

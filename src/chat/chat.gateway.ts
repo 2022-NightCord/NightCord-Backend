@@ -1,7 +1,5 @@
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-} from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
 import { ChatService } from 'src/chat/chat.service';
 import { socketSendDTO } from 'src/chat/dto/socket-send.dto';
 
@@ -9,12 +7,15 @@ import { socketSendDTO } from 'src/chat/dto/socket-send.dto';
 export class ChatGateway {
     constructor(private readonly chatService: ChatService) {}
 
+    @WebSocketServer()
+    server: Server;
+
     @SubscribeMessage('chat')
-    async onPosition(client: any, dto: socketSendDTO): Promise<void> {
-        await this.chatService.saveChat({
+    async onPosition(client: Socket, dto: socketSendDTO): Promise<void> {
+        const chatInfo = await this.chatService.saveChat({
             ...dto,
             date: new Date
         });
-        client.broadcast.emit('chat', dto);
+        this.server.emit('chat', chatInfo);
     }
 }
