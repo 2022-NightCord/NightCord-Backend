@@ -9,37 +9,39 @@ import { Server, Socket } from 'socket.io';
 import { ChatService } from 'src/chat/chat.service';
 import { socketSendDTO } from 'src/chat/dto/socket-send.dto';
 
-type usertype = {
-  id: number,
-  username: string
-}
-
 @WebSocketGateway({ cors: true })
-export class ChatGateway {
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect{
     constructor(private readonly chatService: ChatService) {}
 
-  // 초깃값
-  id: number = 0;
-
-  users: usertype[] = [];
+  // 딕셔너리
+  nowGuest = {};
+  users: number = 0;
 
   async handleConnection(): Promise<void> {
-    this.id++;
-    this.users.push({
-      id: this.id,
-      username: "Guest" + this.id.toString()
-    })
+    this.users++;
     this.server.emit('users', this.users);
   }
 
-  async handleDisconnect(): Promise<void> {
-    this.id--;
-    this.users.pop();
+  async handleDisconnect(client: Socket): Promise<void> {
+    this.users--;
     this.server.emit('users', this.users);
+    if ((client.id in this.nowGuest)){
+      delete this.nowGuest[client.id];
+    }
+    this.server.emit('nowClients', Object.values(this.nowGuest));
   }
 
   @WebSocketServer()
   server: Server;
+
+  @SubscribeMessage('getGuestId')
+  async getGuestID(client: Socket, res: number): Promise<void> {
+      // 중복이 아니면
+      if (!(client.id in this.nowGuest) && !(res in Object.values(this.nowGuest))){
+        this.nowGuest[client.id] = res;
+      }
+      this.server.emit('nowClients', Object.values(this.nowGuest));
+  }
 
   @SubscribeMessage('chat')
   async onPosition(client: Socket, dto: socketSendDTO): Promise<void> {
